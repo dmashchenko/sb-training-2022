@@ -1,0 +1,248 @@
+openapi: 3.1.0
+info:
+  title: Conference API
+  description: Conference API
+  version: 0.1.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /conferences:
+    get:
+      tags:
+        - conferences
+      summary: Find all conferences by author
+      operationId: get-conferences
+      responses:
+        '200':
+          description: List of conferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conferences'
+      parameters: []
+    post:
+      summary: ''
+      operationId: post-conferences
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConferenceDto'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+    parameters: []
+    put:
+      summary: ''
+      operationId: put-conferences
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConferenceDto'
+  '/conferences/{conference_id}/talks':
+    parameters:
+      - schema:
+          type: integer
+        name: conference_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Talks'
+      operationId: get-conferences-conference_id-talks
+    post:
+      summary: ''
+      operationId: post-conferences-conference_id-talks
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTalkDto'
+components:
+  schemas:
+    ConferenceDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Conference unique ID
+          example: 101
+          readOnly: true
+        name:
+          type: string
+          description: Conference name
+          example: Kubernetes
+          readOnly: true
+        category:
+          type: string
+          description: Conference category
+          example: DevOps
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+          readOnly: true
+        participantCount:
+          type: integer
+          readOnly: true
+      required:
+        - id
+        - name
+        - category
+        - date
+        - participantCount
+    UpdateConferenceDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Conference unique ID
+          example: 101
+          writeOnly: true
+        name:
+          type: string
+          description: Conference name
+          example: Kubernetes
+          writeOnly: true
+        category:
+          type: string
+          description: Conference category
+          example: DevOps
+          writeOnly: true
+        date:
+          type: string
+          format: date-time
+          writeOnly: true
+        participantCount:
+          type: integer
+          exclusiveMinimum: 100
+          writeOnly: true
+      required:
+        - id
+        - name
+        - category
+        - date
+        - participantCount
+    CreateConferenceDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Conference name
+          example: Kubernetes
+          writeOnly: true
+        category:
+          type: string
+          description: Conference category
+          example: DevOps
+          writeOnly: true
+        date:
+          type: string
+          format: date-time
+          writeOnly: true
+        participantCount:
+          type: integer
+          exclusiveMinimum: 100
+          writeOnly: true
+      required:
+        - name
+        - category
+        - date
+        - participantCount
+    Conferences:
+      type: array
+      items:
+        $ref: '#/components/schemas/ConferenceDto'
+    CreateTalkDto:
+      title: CreateTalkDto
+      x-stoplight:
+        id: k6bvjw86u1kmu
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        speakerName:
+          type: string
+        type:
+          $ref: '#/components/schemas/TalkType'
+      required:
+        - name
+        - description
+        - speakerName
+    TalkDto:
+      title: Talk
+      x-stoplight:
+        id: k6bvjw86u1kmu
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        speakerName:
+          type: string
+        type:
+          $ref: '#/components/schemas/TalkType'
+      required:
+        - id
+        - name
+        - description
+        - speakerName
+        - type
+    TalkType:
+      type:
+        - object
+        - string
+      title: TalkType
+      x-stoplight:
+        id: 9q9m4shmgbtw5
+      enum:
+        - talk
+        - masterclass
+        - workshop
+    Talks:
+      title: Talks
+      x-stoplight:
+        id: jfd7rvvrbtln0
+      type: array
+      items:
+        $ref: '#/components/schemas/TalkDto'

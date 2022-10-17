@@ -1,0 +1,63 @@
+info:
+  version: 0.1.0
+  description: Conference application
+
+server:
+  servlet:
+    jsp:
+      registered: false
+
+spring:
+  sql:
+    init:
+      mode: never
+  application:
+    name: conference
+  jackson:
+    serialization:
+      indent_output: true
+    deserialization:
+      fail-on-unknown-properties: true
+  datasource:
+    url: jdbc:postgresql://localhost/conference
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
+      connection-test-query: SELECT 1
+      pool-name: conference-db-cp
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+    open-in-view: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      static-locations: classpath:/static/, classpath:/api/spec/
+  jmx:
+    enabled: false
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yml
+
+logging:
+  file:
+    name: library.log
+
+springdoc:
+  packages-to-scan: com.xpinjection.conference.adaptors.api
+  swagger-ui:
+    urls:
+      - url: /v1/conference-api.yml
+        name: static
+      - url: /v3/api-docs.yml
+        name: generated
